@@ -156,3 +156,20 @@ func (p *EtcdRegisterPlugin) Register(name string, rcvr interface{}, metadata st
 	p.metasLock.Unlock()
 	return
 }
+
+// Deregister 注销服务
+func (p *EtcdRegisterPlugin) Deregister(name string) (err error) {
+	if "" == strings.TrimSpace(name) {
+		err = errors.New("Register service `name` can't be empty")
+		return
+	}
+
+	nodePath := fmt.Sprintf("%s/%s/%s", p.BasePath, name, p.ServiceAddress)
+	err = p.kv.Delete(nodePath)
+	if err != nil {
+		log.Errorf("cannot delete etcd path %s: %v", nodePath, err)
+		return err
+	}
+
+	return
+}
