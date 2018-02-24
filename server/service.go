@@ -27,6 +27,7 @@ type methodType struct {
 	ArgType    reflect.Type
 	ReplyType  reflect.Type
 	// numCalls   uint
+	hasContext bool
 }
 
 type functionType struct {
@@ -242,32 +243,47 @@ func suitableMethods(typ reflect.Type, reportErr bool) map[string]*methodType {
 		if method.PkgPath != "" {
 			continue
 		}
-		// Method needs four ins: receiver, context.Context, *args, *reply.
-		if mtype.NumIn() != 4 {
+		// Method needs three ins: receiver, *args, *reply
+		// or Method needs four ins: receiver, context, *args, *reply
+		if mtype.NumIn() != 3 && mtype.NumIn() != 4 {
 			if reportErr {
 				log.Info("method", mname, "has wrong number of ins:", mtype.NumIn())
 			}
 			continue
 		}
-		// First arg must be context.Context
-		ctxType := mtype.In(1)
-		if !ctxType.Implements(typeOfContext) {
-			if reportErr {
-				log.Info("method", mname, " must use context.Context as the first parameter")
+		if mtype.NumIn() == 4 {
+			// First arg must be context.Context
+			ctxType := mtype.In(1)
+			if !ctxType.Implements(typeOfContext) {
+				if reportErr {
+					log.Info("method", mname, " must use context.Context as the first parameter")
+				}
+				continue
 			}
-			continue
 		}
 
-		// Second arg need not be a pointer.
-		argType := mtype.In(2)
+		// First arg need not be a pointer.
+		var argType reflect.Type
+		if mtype.NumIn() == 3 {
+			argType = mtype.In(1)
+		} else {
+			argType = mtype.In(2)
+		}
+
 		if !isExportedOrBuiltinType(argType) {
 			if reportErr {
 				log.Info(mname, "parameter type not exported:", argType)
 			}
 			continue
 		}
-		// Third arg must be a pointer.
-		replyType := mtype.In(3)
+		// Second arg must be a pointer.
+		var replyType reflect.Type
+		if mtype.NumIn() == 3 {
+			replyType = mtype.In(2)
+		} else {
+			replyType = mtype.In(3)
+		}
+
 		if replyType.Kind() != reflect.Ptr {
 			if reportErr {
 				log.Info("method", mname, "reply type not a pointer:", replyType)
@@ -297,6 +313,10 @@ func suitableMethods(typ reflect.Type, reportErr bool) map[string]*methodType {
 		}
 		methods[mname] = &methodType{method: method, ArgType: argType, ReplyType: replyType}
 
+		if mtype.NumIn() == 4 {
+			methods[mname].hasContext = true
+		}
+
 		argsReplyPools.Init(argType)
 		argsReplyPools.Init(replyType)
 	}
@@ -311,8 +331,17 @@ func (s *service) call(ctx context.Context, mtype *methodType, argv, replyv refl
 	}()
 
 	function := mtype.method.Func
+	var returnValues []reflect.Value
+
+	if mtype.hasContext {
+		returnValues = function.Call([]reflect.Value{s.rcvr, reflect.ValueOf(ctx), argv, replyv})
+	} else {
+		returnValues = function.Call([]reflect.Value{s.rcvr, argv, replyv})
+	}
+
 	// Invoke the method, providing a new value for the reply.
-	returnValues := function.Call([]reflect.Value{s.rcvr, reflect.ValueOf(ctx), argv, replyv})
+	// returnValues := function.Call([]reflect.Value{s.rcvr, reflect.ValueOf(ctx), argv, replyv})
+
 	// The return value for the method is an error.
 	errInter := returnValues[0].Interface()
 	if errInter != nil {
