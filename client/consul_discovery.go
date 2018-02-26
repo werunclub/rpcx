@@ -58,17 +58,16 @@ func NewConsulDiscoveryStore(basePath string, kv store.Store) ServiceDiscovery {
 	ps, err := kv.List(basePath)
 	if err != nil {
 		log.Infof("cannot get services of from registry: %v", basePath, err)
-		panic(err)
+	} else {
+		var pairs = make([]*KVPair, 0, len(ps))
+		prefix := d.basePath + "/"
+		for _, p := range ps {
+			k := strings.TrimPrefix(p.Key, prefix)
+			pairs = append(pairs, &KVPair{Key: k, Value: string(p.Value)})
+		}
+		d.pairs = pairs
+		d.RetriesAfterWatchFailed = -1
 	}
-
-	var pairs = make([]*KVPair, 0, len(ps))
-	prefix := d.basePath + "/"
-	for _, p := range ps {
-		k := strings.TrimPrefix(p.Key, prefix)
-		pairs = append(pairs, &KVPair{Key: k, Value: string(p.Value)})
-	}
-	d.pairs = pairs
-	d.RetriesAfterWatchFailed = -1
 	go d.watch()
 	return d
 }
