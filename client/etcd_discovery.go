@@ -52,7 +52,7 @@ func NewEtcdDiscoveryStore(basePath string, kv store.Store) ServiceDiscovery {
 
 	ps, err := kv.List(basePath)
 	if err != nil {
-		log.Infof("cannot get services of from registry: %v", basePath, err)
+		log.Warnf("cannot get services of from registry: %v", basePath, err)
 	} else {
 		var pairs = make([]*KVPair, 0, len(ps))
 		prefix := d.basePath + "/"
