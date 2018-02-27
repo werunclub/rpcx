@@ -425,9 +425,15 @@ func (s *Server) handleRequest(ctx context.Context, req *protocol.Message) (res 
 		return handleError(res, err)
 	}
 
+	// 兼容入参非指针的情况
+	argvv := reflect.ValueOf(argv)
+	if mtype.ArgType.Kind() != reflect.Ptr {
+		argvv = reflect.ValueOf(argv).Elem()
+	}
+
 	replyv := argsReplyPools.Get(mtype.ReplyType)
 
-	err = service.call(ctx, mtype, reflect.ValueOf(argv), reflect.ValueOf(replyv))
+	err = service.call(ctx, mtype, argvv, reflect.ValueOf(replyv))
 
 	argsReplyPools.Put(mtype.ArgType, argv)
 	if err != nil {
