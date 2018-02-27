@@ -408,7 +408,7 @@ func (s *Server) handleRequest(ctx context.Context, req *protocol.Message) (res 
 		if service.function[methodName] != nil { //check raw functions
 			return s.handleRequestForFunction(ctx, req)
 		}
-		err = errors.New("rpcx: can't find method " + methodName)
+		err = fmt.Errorf("rpcx: can't find method: %s.%s", serviceName, methodName)
 		return handleError(res, err)
 	}
 
@@ -470,7 +470,7 @@ func (s *Server) handleRequestForFunction(ctx context.Context, req *protocol.Mes
 	}
 	mtype := service.function[methodName]
 	if mtype == nil {
-		err = errors.New("rpcx: can't find method " + methodName)
+		err = fmt.Errorf("rpcx: can't find method: %s.%s", serviceName, methodName)
 		return handleError(res, err)
 	}
 
