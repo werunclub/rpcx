@@ -425,14 +425,7 @@ func (s *Server) handleRequest(ctx context.Context, req *protocol.Message) (res 
 		return handleError(res, err)
 	}
 
-	// 兼容入参非指针的情况
-	argvv := reflect.ValueOf(argv)
-	if mtype.ArgType.Kind() != reflect.Ptr {
-		argvv = reflect.ValueOf(argv).Elem()
-	}
-
 	replyv := argsReplyPools.Get(mtype.ReplyType)
-
 	if mtype.ArgType.Kind() != reflect.Ptr {
 		err = service.call(ctx, mtype, reflect.ValueOf(argv).Elem(), reflect.ValueOf(replyv))
 	} else {
