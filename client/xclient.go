@@ -10,6 +10,7 @@ import (
 	"time"
 
 	ex "github.com/smallnest/rpcx/errors"
+	"github.com/smallnest/rpcx/log"
 	"github.com/smallnest/rpcx/protocol"
 	"github.com/smallnest/rpcx/share"
 )
@@ -210,7 +211,7 @@ func (c *xClient) selectClient(ctx context.Context, servicePath, serviceMethod s
 	if k == "" {
 		return "", nil, ErrXClientNoServer
 	}
-
+	log.Infof("selectd addr for %v is %v", serviceMethod, k)
 	client, err := c.getCachedClient(k)
 	return k, client, err
 }
