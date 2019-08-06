@@ -15,6 +15,9 @@ import (
 
 // Connect connects the server via specified network.
 func (c *Client) Connect(network, address string) error {
+
+	log.Infof("connect server: %v %v", network, address)
+
 	var conn net.Conn
 	var err error
 
