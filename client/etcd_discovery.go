@@ -52,17 +52,33 @@ func NewEtcdDiscoveryStore(basePath string, kv store.Store) ServiceDiscovery {
 
 	ps, err := kv.List(basePath)
 	if err != nil {
-		log.Warnf("cannot get services of from registry: %v", basePath, err)
-	} else {
-		var pairs = make([]*KVPair, 0, len(ps))
-		prefix := d.basePath + "/"
-		for _, p := range ps {
-			k := strings.TrimPrefix(p.Key, prefix)
-			pairs = append(pairs, &KVPair{Key: k, Value: string(p.Value)})
-		}
-		d.pairs = pairs
-		d.RetriesAfterWatchFailed = -1
+		log.Infof("cannot get services of from registry: %v, err: %v", basePath, err)
+		panic(err)
 	}
+
+	var pairs = make([]*KVPair, 0, len(ps))
+	var prefix string
+	for _, p := range ps {
+		if prefix == "" {
+			if strings.HasPrefix(p.Key, "/") {
+				if strings.HasPrefix(d.basePath, "/") {
+					prefix = d.basePath + "/"
+				} else {
+					prefix = "/" + d.basePath + "/"
+				}
+			} else {
+				if strings.HasPrefix(d.basePath, "/") {
+					prefix = d.basePath[1:] + "/"
+				} else {
+					prefix = d.basePath + "/"
+				}
+			}
+		}
+		k := strings.TrimPrefix(p.Key, prefix)
+		pairs = append(pairs, &KVPair{Key: k, Value: string(p.Value)})
+	}
+	d.pairs = pairs
+	d.RetriesAfterWatchFailed = -1
 
 	go d.watch()
 	return d
@@ -160,8 +176,23 @@ func (d *EtcdDiscovery) watch() {
 					break readChanges
 				}
 				var pairs []*KVPair // latest servers
-				prefix := d.basePath + "/"
+				var prefix string
 				for _, p := range ps {
+					if prefix == "" {
+						if strings.HasPrefix(p.Key, "/") {
+							if strings.HasPrefix(d.basePath, "/") {
+								prefix = d.basePath + "/"
+							} else {
+								prefix = "/" + d.basePath + "/"
+							}
+						} else {
+							if strings.HasPrefix(d.basePath, "/") {
+								prefix = d.basePath[1:] + "/"
+							} else {
+								prefix = d.basePath + "/"
+							}
+						}
+					}
 					k := strings.TrimPrefix(p.Key, prefix)
 					pairs = append(pairs, &KVPair{Key: k, Value: string(p.Value)})
 				}
