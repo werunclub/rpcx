@@ -211,7 +211,7 @@ func (c *xClient) selectClient(ctx context.Context, servicePath, serviceMethod s
 	if k == "" {
 		return "", nil, ErrXClientNoServer
 	}
-	log.Infof("selectd addr for %v is %v", serviceMethod, k)
+	log.Infof("got server for %v.%v is %v", servicePath, serviceMethod, k)
 	client, err := c.getCachedClient(k)
 	return k, client, err
 }
