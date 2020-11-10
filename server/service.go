@@ -11,7 +11,7 @@ import (
 	"unicode"
 	"unicode/utf8"
 
-	"github.com/smallnest/rpcx/log"
+	"github.com/werunclub/rpcx/log"
 )
 
 // Precompute the reflect type for error. Can't use error directly

@@ -6,7 +6,7 @@ import (
 	"reflect"
 	"runtime"
 
-	"github.com/smallnest/rpcx/protocol"
+	"github.com/werunclub/rpcx/protocol"
 	"golang.org/x/net/trace"
 )
 

@@ -5,8 +5,8 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/smallnest/rpcx/protocol"
-	"github.com/smallnest/rpcx/share"
+	"github.com/werunclub/rpcx/protocol"
+	"github.com/werunclub/rpcx/share"
 )
 
 type Args struct {

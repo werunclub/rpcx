@@ -8,14 +8,13 @@ It search structs in your specified files and add them as services. Currently it
 
 ```sh
 # install
-go get -u github.com/smallnest/rpcx/tool/xgen/...
+go get -u github.com/werunclub/rpcx/tool/xgen/...
 
 # run
 xgen -o server.go <file>.go
 ```
 
 The above will generate server.go containing a rpcx which registers all exported struct types contained in `<file>.go`.
-
 
 ## Options
 
@@ -33,7 +32,7 @@ The above will generate server.go containing a rpcx which registers all exported
 You can run as:
 
 ```sh
-xgen [options] <file1>.go <file2>.go <file3>.go 
+xgen [options] <file1>.go <file2>.go <file3>.go
 ```
 
 for example, `xgen -o server.go a.go b.go /User/abc/go/src/github.com/abc/aaa/c.go`

@@ -1,4 +1,4 @@
-package: github.com/smallnest/rpcx
+package: github.com/werunclub/rpcx
 import:
   - package: github.com/docker/libkv
     version: ^0.2.1

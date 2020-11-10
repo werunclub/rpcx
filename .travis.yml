@@ -1,16 +1,15 @@
 language: go
 
-
 go:
   - 1.9.x
 
 before_script:
-  - go get -u -t -v github.com/smallnest/rpcx/...
+  - go get -u -t -v github.com/werunclub/rpcx/...
   - go get github.com/mattn/goveralls
 
 script:
- - go test -v ./...
- - goveralls -service=travis-ci
+  - go test -v ./...
+  - goveralls -service=travis-ci
 
 notifications:
   email:

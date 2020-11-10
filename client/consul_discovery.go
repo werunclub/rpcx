@@ -10,7 +10,7 @@ import (
 	"github.com/docker/libkv"
 	"github.com/docker/libkv/store"
 	"github.com/docker/libkv/store/consul"
-	"github.com/smallnest/rpcx/log"
+	"github.com/werunclub/rpcx/log"
 )
 
 func init() {

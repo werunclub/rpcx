@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/smallnest/rpcx/server"
+	"github.com/werunclub/rpcx/server"
 )
 
 func TestXClient_IT(t *testing.T) {

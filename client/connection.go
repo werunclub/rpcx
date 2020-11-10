@@ -9,8 +9,8 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/smallnest/rpcx/log"
-	"github.com/smallnest/rpcx/share"
+	"github.com/werunclub/rpcx/log"
+	"github.com/werunclub/rpcx/share"
 )
 
 // Connect connects the server via specified network.
