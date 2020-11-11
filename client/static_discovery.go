@@ -30,12 +30,12 @@ func NewStaticDiscovery(basePath, servicePath, configFile string) ServiceDiscove
 	// format:  {"serviceName": ["addr1", "addr1"]}
 	data, err := ioutil.ReadFile(configFile)
 	if err != nil {
-		log.Panic(err)
+		log.Panicf("read config file error: %v", err)
 	}
 
 	servicesData := make(map[string][]string)
 	if err := json.Unmarshal(data, &servicesData); err != nil {
-		log.Panic(err)
+		log.Panicf("parse config file error: %v", err)
 	}
 
 	// find service
@@ -51,7 +51,7 @@ func NewStaticDiscovery(basePath, servicePath, configFile string) ServiceDiscove
 		}
 	}
 
-	log.Infof("loaded StaticDiscovery config: %v", discovery.pairs)
+	log.Infof("loaded config: %v", discovery.pairs)
 
 	return discovery
 }
