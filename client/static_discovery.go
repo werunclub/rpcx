@@ -3,8 +3,9 @@ package client
 import (
 	"encoding/json"
 	"io/ioutil"
-	"log"
 	"sync"
+
+	"github.com/werunclub/rpcx/log"
 )
 
 // StaticDiscovery is a static service discovery.
@@ -26,16 +27,31 @@ func NewStaticDiscovery(basePath, servicePath, configFile string) ServiceDiscove
 		servicePath: servicePath,
 	}
 
-	// format:  [{Key: "", Value: ""}, {Key: "", Value: ""}]
+	// format:  {"serviceName": ["addr1", "addr1"]}
 	data, err := ioutil.ReadFile(configFile)
 	if err != nil {
-		log.Fatal(err)
+		log.Panic(err)
 	}
 
-	discovery.pairs = make([]*KVPair, 0, 1)
-	if err := json.Unmarshal(data, &discovery.pairs); err != nil {
-		log.Fatal(err)
+	servicesData := make(map[string][]string)
+	if err := json.Unmarshal(data, &servicesData); err != nil {
+		log.Panic(err)
 	}
+
+	// find service
+	for k, pairs := range servicesData {
+		if k == servicePath {
+			for _, v := range pairs {
+				discovery.pairs = append(discovery.pairs, &KVPair{
+					Key:   v,
+					Value: "tps=",
+				})
+			}
+			break
+		}
+	}
+
+	log.Infof("loaded StaticDiscovery config: %v", discovery.pairs)
 
 	return discovery
 }
