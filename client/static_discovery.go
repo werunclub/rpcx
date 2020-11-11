@@ -68,11 +68,27 @@ func (d StaticDiscovery) GetServices() []*KVPair {
 
 // WatchService returns a nil chan.
 func (d *StaticDiscovery) WatchService() chan []*KVPair {
-	return nil
+	ch := make(chan []*KVPair, 10)
+	d.chans = append(d.chans, ch)
+	return ch
 }
 
 func (d *StaticDiscovery) RemoveWatcher(ch chan []*KVPair) {
+	d.mu.Lock()
+	defer d.mu.Unlock()
+
+	var chans []chan []*KVPair
+	for _, c := range d.chans {
+		if c == ch {
+			continue
+		}
+
+		chans = append(chans, c)
+	}
+
+	d.chans = chans
 }
 
 func (d *StaticDiscovery) Close() {
+	close(d.stopCh)
 }
