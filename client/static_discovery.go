@@ -13,22 +13,25 @@ import (
 type StaticDiscovery struct {
 	basePath    string
 	servicePath string
-	pairs       []*KVPair
-	chans       []chan []*KVPair
-	mu          sync.Mutex
+	configPath  string
+
+	pairs []*KVPair
+	chans []chan []*KVPair
+	mu    sync.Mutex
 
 	stopCh chan struct{}
 }
 
 // NewStaticDiscovery returns a new StaticDiscovery.
-func NewStaticDiscovery(basePath, servicePath, configFile string) ServiceDiscovery {
+func NewStaticDiscovery(basePath, servicePath, configPath string) ServiceDiscovery {
 	discovery := &StaticDiscovery{
 		basePath:    basePath,
 		servicePath: servicePath,
+		configPath:  configPath,
 	}
 
 	// format:  {"serviceName": ["addr1", "addr1"]}
-	data, err := ioutil.ReadFile(configFile)
+	data, err := ioutil.ReadFile(configPath)
 	if err != nil {
 		log.Panicf("read config file error: %v", err)
 	}
@@ -46,19 +49,27 @@ func NewStaticDiscovery(basePath, servicePath, configFile string) ServiceDiscove
 					Key:   v,
 					Value: "tps=",
 				})
+
+				log.Infof("found server for %s: %s", servicePath, v)
 			}
 			break
 		}
 	}
 
-	log.Infof("loaded config: %v", discovery.pairs)
-
 	return discovery
+}
+
+// NewStaticDiscoveryTemplate returns a new StaticDiscovery template.
+func NewStaticDiscoveryTemplate(basePath, configPath string) ServiceDiscovery {
+	return &StaticDiscovery{
+		basePath:   basePath,
+		configPath: configPath,
+	}
 }
 
 // Clone clones this ServiceDiscovery with new servicePath.
 func (d *StaticDiscovery) Clone(servicePath string) ServiceDiscovery {
-	return d
+	return NewStaticDiscovery(d.basePath, servicePath, d.configPath)
 }
 
 // GetServices returns the servers
@@ -90,5 +101,9 @@ func (d *StaticDiscovery) RemoveWatcher(ch chan []*KVPair) {
 }
 
 func (d *StaticDiscovery) Close() {
+	close(d.stopCh)
+}
+
+func (d *StaticDiscovery) load() {
 	close(d.stopCh)
 }
