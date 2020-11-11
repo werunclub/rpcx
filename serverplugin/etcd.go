@@ -1,4 +1,3 @@
-// +build etcd
 package serverplugin
 
 import (
