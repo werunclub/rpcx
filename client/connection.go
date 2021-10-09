@@ -21,10 +21,6 @@ func (c *Client) Connect(network, address string) error {
 	switch network {
 	case "http":
 		conn, err = newDirectHTTPConn(c, network, address)
-	case "kcp":
-		conn, err = newDirectKCPConn(c, network, address)
-	case "quic":
-		conn, err = newDirectQuicConn(c, network, address)
 	case "unix":
 		conn, err = newDirectConn(c, network, address)
 	default:
