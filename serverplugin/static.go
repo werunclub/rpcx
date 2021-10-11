@@ -6,6 +6,7 @@ import (
 
 // StaticRegisterPlugin implements static registry.
 type StaticRegisterPlugin struct {
+	ServiceAddress string
 }
 
 // Start starts to connect etcd cluster

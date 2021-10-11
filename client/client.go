@@ -13,7 +13,6 @@ import (
 	"sync"
 	"time"
 
-	circuit "github.com/rubyist/circuitbreaker"
 	"github.com/werunclub/rpcx/log"
 	"github.com/werunclub/rpcx/protocol"
 	"github.com/werunclub/rpcx/share"
@@ -55,9 +54,6 @@ var DefaultOption = Option{
 type Breaker interface {
 	Call(func() error, time.Duration) error
 }
-
-// CircuitBreaker is a default circuit breaker (RateBreaker(0.95, 100)).
-var CircuitBreaker Breaker = circuit.NewRateBreaker(0.95, 100)
 
 // ErrShutdown connection is closed.
 var (
