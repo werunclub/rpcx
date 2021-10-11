@@ -10,9 +10,9 @@ import (
 
 	"github.com/julienschmidt/httprouter"
 	"github.com/soheilhy/cmux"
-	"github.com/werunclub/rpcx/log"
-	"github.com/werunclub/rpcx/protocol"
-	"github.com/werunclub/rpcx/share"
+	"github.com/werunclub/rpcx/v4/log"
+	"github.com/werunclub/rpcx/v4/protocol"
+	"github.com/werunclub/rpcx/v4/share"
 )
 
 func (s *Server) startGateway(network string, ln net.Listener) net.Listener {

@@ -17,9 +17,9 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/werunclub/rpcx/log"
-	"github.com/werunclub/rpcx/protocol"
-	"github.com/werunclub/rpcx/share"
+	"github.com/werunclub/rpcx/v4/log"
+	"github.com/werunclub/rpcx/v4/protocol"
+	"github.com/werunclub/rpcx/v4/share"
 )
 
 // ErrServerClosed is returned by the Server's Serve, ListenAndServe after a call to Shutdown or Close.

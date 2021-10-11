@@ -5,9 +5,9 @@ import (
 	"testing"
 	"time"
 
-	testutils "github.com/werunclub/rpcx/_testutils"
-	"github.com/werunclub/rpcx/protocol"
-	"github.com/werunclub/rpcx/server"
+	testutils "github.com/werunclub/rpcx/v4/_testutils"
+	"github.com/werunclub/rpcx/v4/protocol"
+	"github.com/werunclub/rpcx/v4/server"
 )
 
 type Args struct {

@@ -9,9 +9,9 @@ import (
 	"sync"
 	"time"
 
-	ex "github.com/werunclub/rpcx/errors"
-	"github.com/werunclub/rpcx/protocol"
-	"github.com/werunclub/rpcx/share"
+	ex "github.com/werunclub/rpcx/v4/errors"
+	"github.com/werunclub/rpcx/v4/protocol"
+	"github.com/werunclub/rpcx/v4/share"
 )
 
 var (

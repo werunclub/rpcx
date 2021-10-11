@@ -6,8 +6,8 @@ import (
 	"net/url"
 	"strconv"
 
-	"github.com/werunclub/rpcx/protocol"
-	"github.com/werunclub/rpcx/share"
+	"github.com/werunclub/rpcx/v4/protocol"
+	"github.com/werunclub/rpcx/v4/share"
 )
 
 const (

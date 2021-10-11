@@ -8,8 +8,8 @@ package serverplugin
 // 	"github.com/rcrowley/go-metrics"
 // 	"github.com/rcrowley/go-metrics/exp"
 // 	influxdb "github.com/vrischmann/go-metrics-influxdb"
-// 	"github.com/werunclub/rpcx/protocol"
-// 	"github.com/werunclub/rpcx/server"
+// 	"github.com/werunclub/rpcx/v4/protocol"
+// 	"github.com/werunclub/rpcx/v4/server"
 // )
 
 // // MetricsPlugin has an issue. It changes seq of requests and it is wrong!!!!

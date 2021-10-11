@@ -1,8 +1,8 @@
 package share
 
 import (
-	"github.com/werunclub/rpcx/codec"
-	"github.com/werunclub/rpcx/protocol"
+	"github.com/werunclub/rpcx/v4/codec"
+	"github.com/werunclub/rpcx/v4/protocol"
 )
 
 const (

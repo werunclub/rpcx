@@ -6,7 +6,7 @@ import (
 	"errors"
 	"io"
 
-	"github.com/werunclub/rpcx/util"
+	"github.com/werunclub/rpcx/v4/util"
 )
 
 // MaxMessageLength is the max length of a message.

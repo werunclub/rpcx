@@ -1,4 +1,4 @@
-module github.com/werunclub/rpcx
+module github.com/werunclub/rpcx/v4
 
 go 1.16
 

@@ -4,8 +4,8 @@ import (
 	"context"
 	"net"
 
-	"github.com/werunclub/rpcx/errors"
-	"github.com/werunclub/rpcx/protocol"
+	"github.com/werunclub/rpcx/v4/errors"
+	"github.com/werunclub/rpcx/v4/protocol"
 )
 
 //PluginContainer represents a plugin container that defines all methods to manage plugins.

@@ -5,7 +5,7 @@ import (
 	"io/ioutil"
 	"sync"
 
-	"github.com/werunclub/rpcx/log"
+	"github.com/werunclub/rpcx/v4/log"
 )
 
 // StaticDiscovery is a static service discovery.
