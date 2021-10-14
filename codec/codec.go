@@ -7,7 +7,7 @@ import (
 
 	proto "github.com/gogo/protobuf/proto"
 	pb "github.com/golang/protobuf/proto"
-	"github.com/vmihailenco/msgpack"
+	"github.com/vmihailenco/msgpack/v4"
 )
 
 // Codec defines the interface that decode/encode payload.
