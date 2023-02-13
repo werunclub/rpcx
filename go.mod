@@ -13,8 +13,7 @@ require (
 	github.com/soheilhy/cmux v0.1.3
 	github.com/tatsushid/go-fastping v0.0.0-20160109021039-d7bb493dee3e
 	github.com/valyala/fastrand v0.0.0-20170531153657-19dd0f0bf014
-	github.com/vmihailenco/msgpack v3.2.4+incompatible
-	github.com/vmihailenco/msgpack/v4 v4.3.12 // indirect
+	github.com/vmihailenco/msgpack/v4 v4.3.12
 	golang.org/x/net v0.0.0-20210428140749-89ef3d95e781
 	golang.org/x/sys v0.0.0-20210510120138-977fb7262007 // indirect
 	google.golang.org/grpc v1.41.0 // indirect
