@@ -111,7 +111,7 @@ func (s *Server) Address() net.Addr {
 // The client is designated by the conn.
 // conn can be gotten from context in services:
 //
-//   ctx.Value(RemoteConnContextKey)
+//	ctx.Value(RemoteConnContextKey)
 //
 // servicePath, serviceMethod, metadata can be set to zero values.
 func (s *Server) SendMessage(conn net.Conn, servicePath, serviceMethod string, metadata map[string]string, data []byte) error {
@@ -298,7 +298,7 @@ func (s *Server) serveConn(conn net.Conn) {
 		req, err := s.readRequest(ctx, r)
 		if err != nil {
 			if err == io.EOF {
-				log.Infof("client has closed this connection: %s", conn.RemoteAddr().String())
+				log.Debugf("client has closed this connection: %s", conn.RemoteAddr().String())
 			} else if strings.Contains(err.Error(), "use of closed network connection") {
 				log.Infof("rpcx: connection %s is closed", conn.RemoteAddr().String())
 			} else {
