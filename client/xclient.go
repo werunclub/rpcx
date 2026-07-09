@@ -378,7 +378,12 @@ func (c *xClient) Call(ctx context.Context, serviceMethod string, args interface
 			}
 
 			c.removeClient(k, client)
-			client, err = c.getCachedClient(k)
+			// 重连成功时保留调用错误，避免其 nil 结果覆盖失败原因导致调用被误判成功
+			var connErr error
+			client, connErr = c.getCachedClient(k)
+			if connErr != nil {
+				err = connErr
+			}
 		}
 		return err
 	case Failover:
@@ -398,7 +403,12 @@ func (c *xClient) Call(ctx context.Context, serviceMethod string, args interface
 
 			c.removeClient(k, client)
 			//select another server
-			k, client, err = c.selectClient(ctx, c.servicePath, serviceMethod, args)
+			// 重选成功时保留调用错误，避免其 nil 结果覆盖失败原因导致调用被误判成功
+			var selectErr error
+			k, client, selectErr = c.selectClient(ctx, c.servicePath, serviceMethod, args)
+			if selectErr != nil {
+				err = selectErr
+			}
 		}
 
 		return err
@@ -496,17 +506,23 @@ func (c *xClient) SendRaw(ctx context.Context, r *protocol.Message) (map[string]
 		for retries > 0 {
 			retries--
 			if client != nil {
-				m, payload, err := client.SendRaw(ctx, r)
-				if err == nil {
+				m, payload, callErr := client.SendRaw(ctx, r)
+				if callErr == nil {
 					return m, payload, nil
 				}
-				if _, ok := err.(ServiceError); ok {
-					return nil, nil, err
+				if _, ok := callErr.(ServiceError); ok {
+					return nil, nil, callErr
 				}
+				err = callErr
 			}
 
 			c.removeClient(k, client)
-			client, err = c.getCachedClient(k)
+			// 重连成功时保留调用错误，避免其 nil 结果覆盖失败原因导致调用被误判成功
+			var connErr error
+			client, connErr = c.getCachedClient(k)
+			if connErr != nil {
+				err = connErr
+			}
 		}
 		return nil, nil, err
 	case Failover:
@@ -514,18 +530,24 @@ func (c *xClient) SendRaw(ctx context.Context, r *protocol.Message) (map[string]
 		for retries > 0 {
 			retries--
 			if client != nil {
-				m, payload, err := client.SendRaw(ctx, r)
-				if err == nil {
+				m, payload, callErr := client.SendRaw(ctx, r)
+				if callErr == nil {
 					return m, payload, nil
 				}
-				if _, ok := err.(ServiceError); ok {
-					return nil, nil, err
+				if _, ok := callErr.(ServiceError); ok {
+					return nil, nil, callErr
 				}
+				err = callErr
 			}
 
 			c.removeClient(k, client)
 			//select another server
-			k, client, err = c.selectClient(ctx, r.ServicePath, r.ServiceMethod, r.Payload)
+			// 重选成功时保留调用错误，避免其 nil 结果覆盖失败原因导致调用被误判成功
+			var selectErr error
+			k, client, selectErr = c.selectClient(ctx, r.ServicePath, r.ServiceMethod, r.Payload)
+			if selectErr != nil {
+				err = selectErr
+			}
 		}
 
 		return nil, nil, err
